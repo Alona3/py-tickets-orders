@@ -147,4 +147,3 @@ class MovieSessionListSerializerWithTicketsAvailable(MovieSessionListSerializer)
         total_capacity = obj.cinema_hall.capacity
         taken_count = obj.tickets.count()
         return total_capacity - taken_count
-    
