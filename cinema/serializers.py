@@ -105,8 +105,13 @@ class TicketSerializer(serializers.ModelSerializer):
         movie_session = data.get("movie_session") or getattr(self.instance, "movie_session", None)
         row = data.get("row") or getattr(self.instance, "row", None)
         seat = data.get("seat") or getattr(self.instance, "seat", None)
+
+        if movie_session is None or row is None or seat is None:
+            raise serializers.ValidationError("You need to specify movie_session, row, and seat.")
+
         if Ticket.objects.filter(movie_session=movie_session, row=row, seat=seat).exists():
-            raise serializers.ValidationError("Це місце вже зайняте.")
+            raise serializers.ValidationError("This place is already taken.")
+
         return data
 
 

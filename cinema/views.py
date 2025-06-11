@@ -16,6 +16,8 @@ from cinema.serializers import (
     MovieSessionDetailSerializer,
     MovieListSerializer,
     OrderSerializer,
+    MovieSessionListSerializerWithTicketsAvailable,
+    MovieSessionDetailSerializerWithTakenPlaces,
 )
 
 from django_filters.rest_framework import DjangoFilterBackend
@@ -80,7 +82,7 @@ class OrderViewSet(viewsets.ModelViewSet):
 
 class MovieFilter(filters.FilterSet):
     genres = filters.CharFilter(field_name='genres__name', lookup_expr='iexact')
-    actors = filters.CharFilter(field_name='actors__first_name', lookup_expr='icontains')  # Можна покращити
+    actors = filters.CharFilter(field_name='actors__first_name', lookup_expr='icontains')
     title = filters.CharFilter(field_name='title', lookup_expr='icontains')
 
     class Meta:
@@ -94,8 +96,8 @@ class MovieViewSetWithFilter(viewsets.ModelViewSet):
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
     filter_backends = (DjangoFilterBackend,)
-    filterset_fields = ['genres__name', 'actors__first_name', 'title']  # Якщо хочеш - можна доопрацювати
-
+    filterset_class = MovieFilter
+    
     def get_serializer_class(self):
         if self.action == "list":
             return MovieListSerializer
